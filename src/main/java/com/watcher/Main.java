@@ -22,8 +22,10 @@ public class Main {
 
     private static FileSender sender = null;
 
+    // 初始化程序
     private static void initialize(){
 
+        // Check resources.
         if(!Resources.isInitialized()){
             System.out.println("初始化失败!!!");
             return;
@@ -31,7 +33,7 @@ public class Main {
             System.out.println("连接数据成功...");
         }
 
-        // Instantiating the Files Table
+        // Instantiating the Files Table.
         try {
             table = new FilesTable();
         } catch (SQLException | WatcherException | ParseException e) {
@@ -58,6 +60,7 @@ public class Main {
             close();
         }
 
+        // Instantiating the Files Table Watcher
         try {
             watcher = new FilesTableWatcher(table);
         } catch (WatcherException e) {
@@ -66,6 +69,7 @@ public class Main {
             close();
         }
 
+        // Instantiating the File Sender
         try {
             sender = new FileSender(watcher.getQueue(), table);
         } catch (WatcherException e) {
@@ -77,6 +81,7 @@ public class Main {
 
     // 关闭程序
     private static void close(){
+
         System.out.println("关闭程序...");
         boolean senderClosed = true;
         if(sender != null && sender.isRunning()){
@@ -91,7 +96,7 @@ public class Main {
         boolean monitorClosed = true;
         if(monitor != null && monitor.isRunning()){
             monitorClosed = false;
-            watcher.close();
+            monitor.close();
         }
         boolean filterClosed = true;
         if(filter != null && filter.isRunning()){
@@ -124,6 +129,7 @@ public class Main {
      */
     public static void main(String[] args) {
 
+        // Initialize the Program.
         initialize();
 
         // Startup threads.
