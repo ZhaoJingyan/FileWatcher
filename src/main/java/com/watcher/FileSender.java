@@ -49,8 +49,7 @@ class FileSender extends Thread {
                     System.out.println("发送失败");
             }
         }catch(InterruptedException e){
-            e.printStackTrace();
-            System.out.println("File Sender 线程堵塞被终止!!!");
+            System.out.printf("File Sender 线程堵塞被终止[%s]!!!\n", e.getMessage());
         }
 
         ControlCenter.putMessage(CLOSE);

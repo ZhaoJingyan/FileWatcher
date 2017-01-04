@@ -40,18 +40,17 @@ class FilesFilter extends Thread {
                 }
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
-            System.out.println("Files Filter 线程堵塞被终止!!!");
+            System.out.printf("Files Filter 线程堵塞被终止[%s]!!!\n", e.getMessage());
         }
         ControlCenter.putMessage(CLOSE);
     }
 
-    public void close() {
+    void close() {
         this.interrupt();
         this.running = false;
     }
 
-    public LinkedBlockingQueue<Message> getQueue() {
+    LinkedBlockingQueue<Message> getQueue() {
         return this.queue;
     }
 

@@ -60,8 +60,7 @@ class FilesMonitor extends Thread {
                 key.reset();
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
-            System.out.println("Files Monitor 线程堵塞被终止!!!");
+            System.out.printf("Files Monitor 线程堵塞被终止[%s]!!!\n", e.getMessage());
         }
 
         ControlCenter.putMessage(CLOSE);

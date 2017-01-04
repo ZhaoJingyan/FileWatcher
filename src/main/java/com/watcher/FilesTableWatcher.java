@@ -43,8 +43,7 @@ class FilesTableWatcher extends Thread implements FileDisposeAdapter {
                 table.refresh(time, this);
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
-            System.out.println("Files Table Watcher 线程堵塞被终止!!!");
+            System.out.printf("Files Table Watcher 线程堵塞被终止[%s]!!!\n", e.getMessage());
         }
 
         ControlCenter.putMessage(CLOSE);
