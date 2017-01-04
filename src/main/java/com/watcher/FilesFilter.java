@@ -33,8 +33,6 @@ class FilesFilter extends Thread {
         try {
             while (isRunning()) {
                 Message message = this.queue.take();
-                //System.out.println(message.toString());
-                //System.out.println(String.format("队列长度: %d",queue.size()));
                 if (!table.put(message)) {
                     System.out.printf("%s 非监控对象...\n", message.info());
                 }
