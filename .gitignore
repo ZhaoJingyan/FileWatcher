@@ -1,2 +1,4 @@
 /.idea/
 /FileWatcher.iml
+pom.xml
+*.db
