@@ -22,10 +22,11 @@ public class Main {
 
     private static FileSender sender = null;
 
+    // 关闭程序
     private static void close(){
         System.out.println("关闭程序...");
         boolean senderClosed = true;
-        if(sender != null && sender.isRunning());{
+        if(sender != null && sender.isRunning()){
             senderClosed = false;
             sender.close();
         }
@@ -49,7 +50,14 @@ public class Main {
         while((message = ControlCenter.takeMessage()) != null){
             if(FileSender.CLOSE.equals(message))
                 senderClosed = true;
+            if(FilesTableWatcher.CLOSE.equals(message))
+                watcherClosed = true;
+            if(FilesMonitor.CLOSE.equals(message))
+                monitorClosed = true;
+            if(FilesFilter.CLOSE.equals(message))
+                filterClosed = true;
             if(senderClosed && watcherClosed && monitorClosed && filterClosed){
+                Resources.close();
                 System.out.println("程序关闭.");
             }
         }
@@ -76,8 +84,7 @@ public class Main {
         } catch (SQLException | WatcherException | ParseException e) {
             e.printStackTrace();
             System.out.println("初始化文件列表失败");
-            Resources.close();
-            System.exit(-1);
+            close();
         }
 
         // Instantiating the File Filter.
@@ -86,8 +93,7 @@ public class Main {
         } catch (WatcherException e) {
             e.printStackTrace();
             System.out.println("初始化文件过滤器失败");
-            Resources.close();
-            System.exit(-1);
+            close();
         }
 
         // Instantiating the File Monitor.
@@ -96,8 +102,7 @@ public class Main {
         } catch (IOException | WatcherException e) {
             e.printStackTrace();
             System.out.println("初始化文件监控器失败!!!");
-            Resources.close();
-            System.exit(-1);
+            close();
         }
 
         try {
@@ -105,8 +110,7 @@ public class Main {
         } catch (WatcherException e) {
             e.printStackTrace();
             System.out.println("初始化文件列表监控器失败!!!");
-            Resources.close();
-            System.exit(-1);
+            close();
         }
 
         try {
@@ -114,8 +118,7 @@ public class Main {
         } catch (WatcherException e) {
             e.printStackTrace();
             System.out.println("初始化文件发送器失败!!!");
-            Resources.close();
-            System.exit(-1);
+            close();
         }
 
         // Startup threads.
@@ -129,11 +132,7 @@ public class Main {
             while (true) {
                 String input = reader.readLine();
                 if("q".equals(input)){
-                    sender.close();
-                    watcher.close();
-                    monitor.close();
-                    filter.close();
-                    Resources.close();
+                    close();
                     return;
                 }
             }
