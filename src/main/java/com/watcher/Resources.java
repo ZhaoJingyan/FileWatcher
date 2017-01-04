@@ -67,7 +67,7 @@ class Resources {
 
     /**
      * 过去文件命中被替换的时间表达式
-     * @return
+     * @return 正则表达式
      */
     static String PATTERN() { return pattern; }
 
