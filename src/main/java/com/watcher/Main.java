@@ -22,54 +22,7 @@ public class Main {
 
     private static FileSender sender = null;
 
-    // 关闭程序
-    private static void close(){
-        System.out.println("关闭程序...");
-        boolean senderClosed = true;
-        if(sender != null && sender.isRunning()){
-            senderClosed = false;
-            sender.close();
-        }
-        boolean watcherClosed = true;
-        if(watcher != null && watcher.isRunning()){
-            watcherClosed = false;
-            watcher.close();
-        }
-        boolean monitorClosed = true;
-        if(monitor != null && monitor.isRunning()){
-            monitorClosed = false;
-            watcher.close();
-        }
-        boolean filterClosed = true;
-        if(filter != null && filter.isRunning()){
-            filterClosed = false;
-            filter.close();
-        }
-
-        String message;
-        while((message = ControlCenter.takeMessage()) != null){
-            if(FileSender.CLOSE.equals(message))
-                senderClosed = true;
-            if(FilesTableWatcher.CLOSE.equals(message))
-                watcherClosed = true;
-            if(FilesMonitor.CLOSE.equals(message))
-                monitorClosed = true;
-            if(FilesFilter.CLOSE.equals(message))
-                filterClosed = true;
-            if(senderClosed && watcherClosed && monitorClosed && filterClosed){
-                Resources.close();
-                System.out.println("程序关闭.");
-            }
-        }
-
-    }
-
-    /**
-     * Main Method.
-     *
-     * @param args Command Lines
-     */
-    public static void main(String[] args) {
+    private static void initialize(){
 
         if(!Resources.isInitialized()){
             System.out.println("初始化失败!!!");
@@ -120,6 +73,58 @@ public class Main {
             System.out.println("初始化文件发送器失败!!!");
             close();
         }
+    }
+
+    // 关闭程序
+    private static void close(){
+        System.out.println("关闭程序...");
+        boolean senderClosed = true;
+        if(sender != null && sender.isRunning()){
+            senderClosed = false;
+            sender.close();
+        }
+        boolean watcherClosed = true;
+        if(watcher != null && watcher.isRunning()){
+            watcherClosed = false;
+            watcher.close();
+        }
+        boolean monitorClosed = true;
+        if(monitor != null && monitor.isRunning()){
+            monitorClosed = false;
+            watcher.close();
+        }
+        boolean filterClosed = true;
+        if(filter != null && filter.isRunning()){
+            filterClosed = false;
+            filter.close();
+        }
+
+        String message;
+        while((message = ControlCenter.takeMessage()) != null){
+            if(FileSender.CLOSE.equals(message))
+                senderClosed = true;
+            if(FilesTableWatcher.CLOSE.equals(message))
+                watcherClosed = true;
+            if(FilesMonitor.CLOSE.equals(message))
+                monitorClosed = true;
+            if(FilesFilter.CLOSE.equals(message))
+                filterClosed = true;
+            if(senderClosed && watcherClosed && monitorClosed && filterClosed){
+                Resources.close();
+                System.out.println("程序关闭.");
+            }
+        }
+
+    }
+
+    /**
+     * Main Method.
+     *
+     * @param args Command Lines
+     */
+    public static void main(String[] args) {
+
+        initialize();
 
         // Startup threads.
         filter.start();
