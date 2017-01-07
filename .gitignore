@@ -1,4 +1,5 @@
 /.idea/
 /FileWatcher.iml
-pom.xml
 *.db
+src/main/java/com/watcher/ui/*.form
+target/
