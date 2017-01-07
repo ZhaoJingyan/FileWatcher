@@ -34,6 +34,8 @@ class Resources {
 
     private static String path;
 
+    private static String script;
+
     private static void initialize() throws SQLException, WatcherException {
         watchedTime = 600000;
         Statement statement = connection.createStatement();
@@ -47,6 +49,8 @@ class Resources {
                 pattern = value;
             } else if("WATCHED_TIME".equals(name)){
                 watchedTime = Integer.parseInt(name);
+            } else if ("SCRIPT".equals(name)) {
+                script = value;
             }
         }
         set.close();
@@ -55,6 +59,8 @@ class Resources {
             throw new WatcherException("NOT SET PATH!!!");
         if(pattern == null)
             throw new WatcherException("NOT SET PATTERN!!!");
+        if (script == null)
+            throw new WatcherException("NOT SET SCRIPT!!!");
     }
 
     /**
@@ -77,6 +83,15 @@ class Resources {
      */
     static int WATCHED_TIME(){
         return watchedTime;
+    }
+
+    /**
+     * 文件传输脚本.
+     *
+     * @return Script Name
+     */
+    static String SCRIPT() {
+        return script;
     }
 
     /**
