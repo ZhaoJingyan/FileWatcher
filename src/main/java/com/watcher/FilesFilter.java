@@ -12,7 +12,7 @@ class FilesFilter extends Thread {
 
     private FilesTable table;
 
-    private LinkedBlockingQueue<Message> queue;
+    private LinkedBlockingQueue<Message<String>> queue;
 
     private boolean running = true;
 
@@ -32,9 +32,9 @@ class FilesFilter extends Thread {
     public void run() {
         try {
             while (isRunning()) {
-                Message message = this.queue.take();
+                Message<String> message = this.queue.take();
                 if (!table.put(message)) {
-                    System.out.printf("%s 非监控对象...\n", message.info());
+                    System.out.printf("%s 非监控对象...\n", message.data());
                 }
             }
         } catch (InterruptedException e) {
@@ -48,7 +48,7 @@ class FilesFilter extends Thread {
         this.running = false;
     }
 
-    LinkedBlockingQueue<Message> getQueue() {
+    LinkedBlockingQueue<Message<String>> getQueue() {
         return this.queue;
     }
 
