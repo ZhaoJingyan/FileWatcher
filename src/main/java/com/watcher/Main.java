@@ -117,6 +117,7 @@ public class Main {
             if(senderClosed && watcherClosed && monitorClosed && filterClosed){
                 Resources.close();
                 System.out.println("程序关闭.");
+                System.exit(0);
             }
         }
 
