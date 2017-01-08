@@ -38,21 +38,21 @@ class FilesTable {
      * @param message 文件变化消息，其中包含文件名，和事件类型
      * @return 如果返回为false，说明message被过滤
      */
-    boolean put(Message message) {
+    boolean put(Message<String> message) {
         boolean result = false;
         synchronized (lock) {
-            FileInformationColumn column = getColumns(message.info());
+            FileInformationColumn column = getColumns(message.data());
             if (column != null) {
                 if (column.getType().equals("NULL")) {
                     column.setType(message.type());
                     column.setTime(message.time());
-                    System.out.printf("%s 开始监控...\n", message.info());
+                    System.out.printf("%s 开始监控...\n", message.data());
                     result = true;
                 }
                 if(column.getType().equals("ENTRY_CREATE") || column.getType().equals("ENTRY_MODIFY")){
                     column.setType(message.type());
                     column.setTime(message.time());
-                    System.out.printf("%s 刷新信息\n", message.info());
+                    System.out.printf("%s 刷新信息\n", message.data());
                     result = true;
                 }
             }
