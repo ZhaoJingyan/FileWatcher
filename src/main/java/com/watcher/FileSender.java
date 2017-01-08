@@ -15,6 +15,8 @@ class FileSender extends Thread {
 
     private FilesTable table;
 
+    private ProcessWatch watch;
+
     private boolean running = true;
 
     /**
@@ -30,6 +32,7 @@ class FileSender extends Thread {
             throw new WatcherException("文件列表为空!!!");
         this.queue = queue;
         this.table = table;
+        watch = new ProcessWatch();
     }
 
     boolean isRunning(){
@@ -38,6 +41,7 @@ class FileSender extends Thread {
 
     @Override
     public void run() {
+        watch.start();
         try{
             while(isRunning()){
                 String name = queue.take();
@@ -65,9 +69,8 @@ class FileSender extends Thread {
     private int send(String path) throws InterruptedException{
         Runtime runtime = Runtime.getRuntime();
         try {
-            Process process = runtime.exec(".\\CopyFile.bat " + path);
-            ProcessWatch watch = new ProcessWatch(process);
-            watch.start();
+            Process process = runtime.exec(".\\" + Resources.SCRIPT() + " " + path);
+            watch.setProcess(process);
             process.waitFor();
             watch.setOver(true);
             int exitVal = process.exitValue();
@@ -89,6 +92,8 @@ class FileSender extends Thread {
     void close(){
         this.interrupt();
         this.running = false;
+        if(watch.isRunning())
+            watch.close();
     }
 
 }
