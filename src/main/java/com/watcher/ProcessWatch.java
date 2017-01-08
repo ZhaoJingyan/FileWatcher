@@ -22,7 +22,7 @@ class ProcessWatch extends Thread {
     private Condition condition;
 
     ProcessWatch(){
-        super();
+        super("Process Watch");
         over = false;
         lock = new ReentrantLock();
         condition = lock.newCondition();
@@ -39,9 +39,7 @@ class ProcessWatch extends Thread {
                 refresh();
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
-        } finally {
-            lock.unlock();
+            System.out.printf("Process Watch 线程堵塞被终止[%s]!!!\n", e.getMessage());
         }
     }
 
