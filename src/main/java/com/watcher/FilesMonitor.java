@@ -19,14 +19,14 @@ class FilesMonitor extends Thread {
 
     private boolean running = true;
 
-    private LinkedBlockingQueue<Message> queue;
+    private LinkedBlockingQueue<Message<String>> queue;
 
     /**
      * Constructor.
      * @throws IOException Java文件系统API报错
      * @throws WatcherException 初始化失败
      */
-    FilesMonitor(LinkedBlockingQueue<Message> queue) throws IOException, WatcherException {
+    FilesMonitor(LinkedBlockingQueue<Message<String>> queue) throws IOException, WatcherException {
         super();
         if(queue == null)
             throw new WatcherException("消息队列不能为空");
@@ -44,7 +44,7 @@ class FilesMonitor extends Thread {
         return this.running;
     }
 
-    private Message newMessage(String fileName, String type){
+    private Message<String> newMessage(String fileName, String type){
         return new FileMessage(fileName, type);
     }
 
@@ -80,7 +80,7 @@ class FilesMonitor extends Thread {
         }
     }
 
-    private class FileMessage implements Message{
+    private class FileMessage implements Message<String>{
 
         private String fileName;
 
@@ -95,7 +95,7 @@ class FilesMonitor extends Thread {
         }
 
         @Override
-        public String info() {
+        public String data() {
             return fileName;
         }
 
