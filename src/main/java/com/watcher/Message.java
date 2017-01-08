@@ -4,13 +4,13 @@ package com.watcher;
  * 线程消息.
  * Created by Zhao Jinyan on 2016/12/28.
  */
-interface Message {
+interface Message<T> {
 
     /**
-     * Information in the message.
+     * Data in the message.
      * @return information
      */
-    String info();
+    T data();
 
     /**
      * Message type.
