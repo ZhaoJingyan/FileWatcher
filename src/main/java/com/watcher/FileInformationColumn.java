@@ -90,7 +90,7 @@ class FileInformationColumn {
 
     /**
      * 获取时间
-     * @return
+     * @return Long表示的时间
      */
     long getTime() {
         return time;
