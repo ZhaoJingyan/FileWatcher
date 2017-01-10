@@ -106,13 +106,13 @@ public class Main {
 
         String message;
         while((message = ControlCenter.takeMessage()) != null){
-            if(FileSender.CLOSE.equals(message))
+            if(FileSender.NAME.equals(message))
                 senderClosed = true;
-            if(FilesTableWatcher.CLOSE.equals(message))
+            if(FilesTableWatcher.NAME.equals(message))
                 watcherClosed = true;
-            if(FilesMonitor.CLOSE.equals(message))
+            if(FilesMonitor.NAME.equals(message))
                 monitorClosed = true;
-            if(FilesFilter.CLOSE.equals(message))
+            if(FilesFilter.NAME.equals(message))
                 filterClosed = true;
             if(senderClosed && watcherClosed && monitorClosed && filterClosed){
                 Resources.close();
@@ -120,7 +120,6 @@ public class Main {
                 System.exit(0);
             }
         }
-
     }
 
     /**
@@ -146,14 +145,16 @@ public class Main {
                 if("q".equals(input)){
                     close();
                     return;
+                } else {
+                    System.out.println("unknown!");
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("控制台输入异常");
             Resources.close();
-            System.exit(-1);
         }
+
 
     }
 
