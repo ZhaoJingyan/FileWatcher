@@ -6,48 +6,34 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Files Filter.
  * Created by Zhao Jinyan on 2016/12/28.
  */
-class FilesFilter extends Thread {
+class FilesFilter extends ThreadAdapter {
 
-    static final String CLOSE = "Files Filter closed.";
+    static final String NAME = "Files Filter closed.";
 
     private FilesTable table;
 
     private LinkedBlockingQueue<Message<String>> queue;
 
-    private boolean running = true;
-
     FilesFilter(FilesTable table) throws WatcherException {
-        super();
+        super(NAME);
         if (table == null)
             throw new WatcherException("文件列表不能为空!");
         this.table = table;
         queue = new LinkedBlockingQueue<>();
     }
 
-    boolean isRunning() {
-        return this.running;
-    }
-
     @Override
-    public void run() {
-        try {
-            while (isRunning()) {
-                Message<String> message = this.queue.take();
-                if (!table.put(message)) {
-                    System.out.printf("%s 非监控对象...\n", message.data());
-                }
-            }
-        } catch (InterruptedException e) {
-            System.out.printf("Files Filter 线程堵塞被终止[%s]!!!\n", e.getMessage());
+    protected void execute() throws InterruptedException {
+        Message<String> message = this.queue.take();
+        if (!table.put(message)) {
+            System.out.printf("%s 非监控对象...\n", message.data());
         }
-        ControlCenter.putMessage(CLOSE);
     }
 
-    void close() {
-        this.interrupt();
-        this.running = false;
-    }
-
+    /**
+     * 消息队列
+     * @return 消息队列
+     */
     LinkedBlockingQueue<Message<String>> getQueue() {
         return this.queue;
     }

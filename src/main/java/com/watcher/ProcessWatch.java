@@ -9,11 +9,11 @@ import java.util.concurrent.locks.ReentrantLock;
  * 刷新bat执行时的控制台输出流.
  * Created by Zhao Jinyan on 2017-1-1.
  */
-class ProcessWatch extends Thread {
+class ProcessWatch extends ThreadAdapter {
+
+    private static String NAME = "Process Watch";
 
     private Process process = null;
-
-    private boolean running = true;
 
     private boolean over;
 
@@ -22,28 +22,14 @@ class ProcessWatch extends Thread {
     private Condition condition;
 
     ProcessWatch(){
-        super("Process Watch");
+        super(NAME);
         over = false;
         lock = new ReentrantLock();
         condition = lock.newCondition();
     }
 
-    boolean isRunning(){
-        return running;
-    }
-
     @Override
-    public void run() {
-        try{
-            while (isRunning()){
-                refresh();
-            }
-        } catch (InterruptedException e) {
-            System.out.printf("Process Watch 线程堵塞被终止[%s]!!!\n", e.getMessage());
-        }
-    }
-
-    private void refresh() throws InterruptedException{
+    protected void execute() throws InterruptedException{
         lock.lockInterruptibly();
         try{
             if(process == null)
@@ -64,11 +50,6 @@ class ProcessWatch extends Thread {
         } finally {
             lock.unlock();
         }
-    }
-
-    void close(){
-        running = false;
-        interrupt();
     }
 
     void setOver(boolean over) {

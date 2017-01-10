@@ -7,9 +7,9 @@ import java.util.concurrent.LinkedBlockingDeque;
  * 文件发送器。
  * Created by Zhao Jinyan on 2016-12-30.
  */
-class FileSender extends Thread {
+class FileSender extends ThreadAdapter {
 
-    static final String CLOSE = "file sender closed.";
+    static final String NAME = "File Sender";
 
     private LinkedBlockingDeque<String> queue;
 
@@ -17,15 +17,13 @@ class FileSender extends Thread {
 
     private ProcessWatch watch;
 
-    private boolean running = true;
-
     /**
      * 构造方法.
      * @param queue 消息接收队列
      * @throws WatcherException 初始化失败异常
      */
     FileSender(LinkedBlockingDeque<String> queue, FilesTable table) throws WatcherException {
-        super();
+        super(NAME);
         if(queue == null)
             throw new WatcherException("接收队列为空!!!");
         if(table == null)
@@ -33,31 +31,18 @@ class FileSender extends Thread {
         this.queue = queue;
         this.table = table;
         watch = new ProcessWatch();
-    }
-
-    boolean isRunning(){
-        return this.running;
+        watch.start();
     }
 
     @Override
-    public void run() {
-        watch.start();
-        try{
-            while(isRunning()){
-                String name = queue.take();
-                String path = Resources.PATH() + '\\' + name;
-                System.out.printf("准备发送文件%s\n", path);
-                if(send(path) == 0)
-                    table.updateFile(name);
-                else
-                    System.out.println("发送失败");
-            }
-        }catch(InterruptedException e){
-            System.out.printf("File Sender 线程堵塞被终止[%s]!!!\n", e.getMessage());
-        }
-
-        ControlCenter.putMessage(CLOSE);
-
+    protected void execute() throws InterruptedException {
+        String name = queue.take();
+        String path = Resources.PATH() + '\\' + name;
+        System.out.printf("准备发送文件%s\n", path);
+        if(send(path) == 0)
+            table.updateFile(name);
+        else
+            System.out.println("发送失败");
     }
 
     /**
@@ -90,8 +75,7 @@ class FileSender extends Thread {
      * 关闭线程
      */
     void close(){
-        this.interrupt();
-        this.running = false;
+        super.close();
         if(watch.isRunning())
             watch.close();
     }
