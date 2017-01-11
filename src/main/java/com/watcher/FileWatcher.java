@@ -1,29 +1,31 @@
 package com.watcher;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.text.ParseException;
 
 /**
- * Application Start.
- * Created by Zhao Jinyan on 2016/12/28.
+ * File Watcher. 程序核心类
+ * Created by Zhao Jinyan on 2017/1/11.
  */
-public class Main {
+public abstract class FileWatcher {
 
-    private static FilesMonitor monitor = null;
+    private FilesMonitor monitor = null;
 
-    private static FilesFilter filter = null;
+    private FilesFilter filter = null;
 
-    private static FilesTable table = null;
+    private FilesTable table = null;
 
-    private static FilesTableWatcher watcher = null;
+    private FilesTableWatcher watcher = null;
 
-    private static FileSender sender = null;
+    private FileSender sender = null;
+
+    FileWatcher(){
+        initialize();
+    }
 
     // 初始化程序
-    private static void initialize(){
+    private void initialize(){
 
         // Check resources.
         if(!Resources.isInitialized()){
@@ -77,10 +79,11 @@ public class Main {
             System.out.println("初始化文件发送器失败!!!");
             close();
         }
+
     }
 
     // 关闭程序
-    private static void close(){
+    private void close(){
 
         System.out.println("关闭程序...");
         boolean senderClosed = true;
@@ -122,40 +125,32 @@ public class Main {
         }
     }
 
+    abstract void start();
+
+    FilesMonitor getMonitor() {
+        return monitor;
+    }
+
+    FilesFilter getFilter() {
+        return filter;
+    }
+
+    protected FilesTableWatcher getWatcher() {
+        return watcher;
+    }
+
+    FileSender getSender() {
+        return sender;
+    }
+
     /**
      * Main Method.
      *
      * @param args Command Lines
      */
     public static void main(String[] args) {
-
-        // Initialize the Program.
-        initialize();
-
-        // Startup threads.
-        filter.start();
-        monitor.start();
+        FileWatcher watcher = ControlCenter.getFileWatcher();
         watcher.start();
-        sender.start();
-
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            while (true) {
-                String input = reader.readLine();
-                if("q".equals(input)){
-                    close();
-                    return;
-                } else {
-                    System.out.println("unknown!");
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("控制台输入异常");
-            Resources.close();
-        }
-
-
     }
 
 }
