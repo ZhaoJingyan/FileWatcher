@@ -58,7 +58,7 @@ abstract class ThreadAdapter extends Thread {
             while(isRunning())
                 execute();
         } catch (InterruptedException e){
-            System.out.printf("%s线程堵塞被终止[%s]!!!\n", this.getName(), e.getMessage());
+            ControlCenter.putInformation(String.format("%s线程堵塞被终止[%s]!!!", this.getName(), e.getMessage()));
         }
         ControlCenter.putMessage(new ThreadMessage(this.getName(), CLOSED));
     }
