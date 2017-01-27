@@ -3,3 +3,4 @@
 *.db
 src/main/java/com/watcher/ui/*.form
 target/
+/lib/
