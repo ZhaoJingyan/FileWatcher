@@ -6,12 +6,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Vector;
 
 /**
  *
  * Created by Zhao Jinyan on 2016/12/28.
  */
-class FileInformationColumn {
+public class FileInformationColumn {
 
     private static final DateFormat format  = new SimpleDateFormat("yyyyMMdd");
 
@@ -38,11 +39,15 @@ class FileInformationColumn {
     /**
      *
      * @param information File Information
-     * @throws ParseException 日期转化为字符串失败抛出异常
+     * @throws WatcherException 日期转化为字符串失败抛出异常
      */
-    FileInformationColumn(FileInformation information) throws ParseException {
+    FileInformationColumn(FileInformation information) throws WatcherException {
         this.information = information;
-        this.watchDate = getDate(information.getDate());
+        try {
+            this.watchDate = getDate(information.getDate());
+        } catch (ParseException e) {
+            throw new WatcherException(String.format("String type to date type error:%s.", information.getDate()), e);
+        }
         this.name = information.getName().replaceFirst(Resources.PATTERN(), information.getDate());
         this.type = "NULL";
         this.time = new Date().getTime();
@@ -62,6 +67,14 @@ class FileInformationColumn {
             this.name = information.getName().replaceFirst(Resources.PATTERN(), information.getDate());
             this.type = "NULL";
         }
+    }
+
+    public Vector<String> getVector(){
+        Vector<String> vector = new Vector<>();
+        vector.add(Integer.toString(information.getId()));
+        vector.add(name);
+        vector.add(type);
+        return vector;
     }
 
     /**
