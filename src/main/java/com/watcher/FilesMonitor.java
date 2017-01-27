@@ -13,7 +13,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 class FilesMonitor extends ThreadAdapter {
 
-    static final String NAME = "Files Monitor";
+    private static final String NAME = "Files Monitor";
 
     private WatchService service;
 
@@ -21,10 +21,9 @@ class FilesMonitor extends ThreadAdapter {
 
     /**
      * Constructor.
-     * @throws IOException Java文件系统API报错
      * @throws WatcherException 初始化失败
      */
-    FilesMonitor(LinkedBlockingQueue<Message<String>> queue) throws IOException, WatcherException {
+    FilesMonitor(LinkedBlockingQueue<Message<String>> queue) throws WatcherException {
         super(NAME);
         if(queue == null)
             throw new WatcherException("消息队列不能为空");
@@ -32,9 +31,14 @@ class FilesMonitor extends ThreadAdapter {
         if(!file.exists())
             throw new WatcherException(String.format("[%s]不存在", file.getPath()));
         this.queue = queue;
-        this.service = FileSystems.getDefault().newWatchService();
-        Path path = Paths.get(file.getPath());
-        path.register(this.service,StandardWatchEventKinds.ENTRY_CREATE,StandardWatchEventKinds.ENTRY_MODIFY);
+        try {
+            this.service = FileSystems.getDefault().newWatchService();
+            Path path = Paths.get(file.getPath());
+            path.register(this.service,StandardWatchEventKinds.ENTRY_CREATE,StandardWatchEventKinds.ENTRY_MODIFY);
+        } catch (IOException e) {
+            throw new WatcherException("调用文件监控API失败!",e);
+        }
+
     }
 
     private Message<String> newMessage(String fileName, String type){
