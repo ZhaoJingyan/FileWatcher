@@ -1,8 +1,8 @@
 package com.watcher;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.ParseException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 
 /**
  * File Watcher. 程序核心类
@@ -14,115 +14,53 @@ public abstract class FileWatcher {
 
     private FilesFilter filter = null;
 
-    private FilesTable table = null;
-
     private FilesTableWatcher watcher = null;
 
     private FileSender sender = null;
 
-    FileWatcher(){
+    FileWatcher() throws WatcherException {
         initialize();
     }
 
     // 初始化程序
-    private void initialize(){
+    private void initialize() throws WatcherException {
 
         // Check resources.
-        if(!Resources.isInitialized()){
-            System.out.println("初始化失败!!!");
-            return;
+        if (!Resources.isInitialized()) {
+            throw new WatcherException("初始化失败!!!");
         } else {
             System.out.println("连接数据成功...");
         }
 
-        // Instantiating the Files Table.
+        // Instantiating
         try {
-            table = new FilesTable();
-        } catch (SQLException | WatcherException | ParseException e) {
-            e.printStackTrace();
-            System.out.println("初始化文件列表失败");
-            close();
-        }
-
-        // Instantiating the File Filter.
-        try {
+            FilesTable table = new FilesTable();
             filter = new FilesFilter(table);
-        } catch (WatcherException e) {
-            e.printStackTrace();
-            System.out.println("初始化文件过滤器失败");
-            close();
-        }
-
-        // Instantiating the File Monitor.
-        try {
             monitor = new FilesMonitor(filter.getQueue());
-        } catch (IOException | WatcherException e) {
-            e.printStackTrace();
-            System.out.println("初始化文件监控器失败!!!");
-            close();
-        }
-
-        // Instantiating the Files Table Watcher
-        try {
             watcher = new FilesTableWatcher(table);
-        } catch (WatcherException e) {
-            e.printStackTrace();
-            System.out.println("初始化文件列表监控器失败!!!");
-            close();
-        }
-
-        // Instantiating the File Sender
-        try {
             sender = new FileSender(watcher.getQueue(), table);
         } catch (WatcherException e) {
-            e.printStackTrace();
-            System.out.println("初始化文件发送器失败!!!");
+            throw new WatcherException("初始化进程失败!", e);
+        } finally {
             close();
         }
+
 
     }
 
     // 关闭程序
-    private void close(){
+    private void close() {
 
         System.out.println("关闭程序...");
-        boolean senderClosed = true;
-        if(sender != null && sender.isRunning()){
-            senderClosed = false;
+        if (sender != null)
             sender.close();
-        }
-        boolean watcherClosed = true;
-        if(watcher != null && watcher.isRunning()){
-            watcherClosed = false;
+        if (watcher != null)
             watcher.close();
-        }
-        boolean monitorClosed = true;
-        if(monitor != null && monitor.isRunning()){
-            monitorClosed = false;
+        if (monitor != null)
             monitor.close();
-        }
-        boolean filterClosed = true;
-        if(filter != null && filter.isRunning()){
-            filterClosed = false;
+        if (filter != null)
             filter.close();
-        }
 
-        String message;
-        while((message = ControlCenter.takeMessage()) != null){
-            if(FileSender.NAME.equals(message))
-                senderClosed = true;
-            if(FilesTableWatcher.NAME.equals(message))
-                watcherClosed = true;
-            if(FilesMonitor.NAME.equals(message))
-                monitorClosed = true;
-            if(FilesFilter.NAME.equals(message))
-                filterClosed = true;
-            if(senderClosed && watcherClosed && monitorClosed && filterClosed){
-                Resources.close();
-                System.out.println("程序关闭.");
-                System.exit(0);
-            }
-        }
     }
 
     abstract void start();
@@ -148,9 +86,19 @@ public abstract class FileWatcher {
      *
      * @param args Command Lines
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         FileWatcher watcher = ControlCenter.getFileWatcher();
         watcher.start();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+        String temp;
+        while ((temp = reader.readLine()) != null) {
+            if ("q".equals(temp)) {
+                watcher.close();
+                return;
+            }
+        }
+
     }
 
 }
