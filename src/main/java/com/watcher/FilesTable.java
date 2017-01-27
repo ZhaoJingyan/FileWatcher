@@ -50,13 +50,13 @@ class FilesTable {
                 if (column.getType().equals("NULL")) {
                     column.setType(message.type());
                     column.setTime(message.time());
-                    ControlCenter.putInformation(String.format("%s 开始监控...\n", message.data()));
+                    ControlCenter.putInformation(String.format("%s 开始监控...", message.data()));
                     result = true;
                 }
                 if (column.getType().equals("ENTRY_CREATE") || column.getType().equals("ENTRY_MODIFY")) {
                     column.setType(message.type());
                     column.setTime(message.time());
-                    ControlCenter.putInformation(String.format("%s 刷新信息\n", message.data()));
+                    ControlCenter.putInformation(String.format("%s 刷新信息", message.data()));
                     result = true;
                 }
             }
