@@ -21,14 +21,14 @@ public class FileWatcherFrame extends JFrame implements com.watcher.ControlCente
 
     private JButton closeButton;
 
-    public static void main(String [] args){
+    public static void main(String[] args) {
 
         FileWatcherFrame frame = new FileWatcherFrame();
         frame.setVisible(true);
 
     }
 
-    private FileWatcherFrame(){
+    private FileWatcherFrame() {
 
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -37,10 +37,10 @@ public class FileWatcherFrame extends JFrame implements com.watcher.ControlCente
         }
 
         setTitle("File Watcher");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         //setSize(1000, 400);
 
-        String [] colNames = {"ID", "NAME", "DATE", "TYPE", "INFO"};
+        String[] colNames = {"ID", "NAME", "DATE", "TYPE", "INFO"};
         tableModel = new DefaultTableModel(null, colNames);
         JTable table = new JTable(tableModel);
         table.setEnabled(false);
@@ -76,7 +76,7 @@ public class FileWatcherFrame extends JFrame implements com.watcher.ControlCente
 
     }
 
-    private void initLayout(){
+    private void initLayout() {
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -112,8 +112,8 @@ public class FileWatcherFrame extends JFrame implements com.watcher.ControlCente
     }
 
     @Override
-    public void setTableColumn(List<FileInformationColumn> columns){
-        for(FileInformationColumn column : columns) {
+    public void setTableColumn(List<FileInformationColumn> columns) {
+        for (FileInformationColumn column : columns) {
             tableModel.addRow(column.getVector());
         }
 
@@ -121,6 +121,6 @@ public class FileWatcherFrame extends JFrame implements com.watcher.ControlCente
 
     @Override
     public void isInitialized() {
-        SwingUtilities.invokeLater(() -> setVisible(true) );
+        SwingUtilities.invokeLater(() -> setVisible(true));
     }
 }
