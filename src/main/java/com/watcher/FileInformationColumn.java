@@ -51,7 +51,7 @@ public class FileInformationColumn {
         this.name = information.getName().replaceFirst(Resources.PATTERN(), information.getDate());
         this.type = "NULL";
         this.time = new Date().getTime();
-        System.out.println(this);
+        ControlCenter.putInformation(this.toString());
     }
 
     /**

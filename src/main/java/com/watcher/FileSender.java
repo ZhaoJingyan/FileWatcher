@@ -9,7 +9,7 @@ import java.util.concurrent.LinkedBlockingDeque;
  */
 class FileSender extends ThreadAdapter {
 
-    static final String NAME = "File Sender";
+    private static final String NAME = "File Sender";
 
     private LinkedBlockingDeque<String> queue;
 
@@ -38,11 +38,11 @@ class FileSender extends ThreadAdapter {
     protected void execute() throws InterruptedException {
         String name = queue.take();
         String path = Resources.PATH() + '\\' + name;
-        System.out.printf("准备发送文件%s\n", path);
+        ControlCenter.putInformation(String.format("准备发送文件%s", path));
         if(send(path) == 0)
             table.updateFile(name);
         else
-            System.out.println("发送失败");
+            ControlCenter.putInformation("发送失败");
     }
 
     /**
@@ -60,12 +60,12 @@ class FileSender extends ThreadAdapter {
             watch.setOver(true);
             int exitVal = process.exitValue();
             if(exitVal == 0){
-                System.out.printf("%s 发送成功[%d]...\n", path, exitVal);
+                ControlCenter.putInformation(String.format("%s 发送成功[%d]...", path, exitVal));
             }
             return exitVal;
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.printf("%s 发送失败!!!\n", path);
+            ControlCenter.putInformation(String.format("%s 发送失败!!!", path));
             return 1;
         }
 

@@ -8,6 +8,8 @@ import java.util.concurrent.LinkedBlockingDeque;
  */
 class ControlCenter extends ThreadAdapter {
 
+    private static final String INFO = "info";
+
     private static final String NAME = "Control Center";
 
     private static LinkedBlockingDeque<Message> queue = new LinkedBlockingDeque<>();
@@ -15,6 +17,33 @@ class ControlCenter extends ThreadAdapter {
     private static ControlCenter center = null;
 
     private static FileWatcher fileWatcher = null;
+
+    private static class LogMessage implements Message<String> {
+
+        private String information;
+
+        private String type;
+
+        LogMessage(String information, String type) {
+            this.information = information;
+            this.type = type;
+        }
+
+        @Override
+        public String data() {
+            return information;
+        }
+
+        @Override
+        public String type() {
+            return type;
+        }
+
+        @Override
+        public long time() {
+            return 0;
+        }
+    }
 
     // Default File Watcher
     private static class DefaultFileWatcher extends FileWatcher {
@@ -52,6 +81,14 @@ class ControlCenter extends ThreadAdapter {
         }
     }
 
+    static void putInformation(String information){
+        try{
+            queue.put(new LogMessage(information, INFO));
+        }catch(InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+
     private int runThreadNum = 0;
 
     private ControlCenter() {
@@ -75,6 +112,9 @@ class ControlCenter extends ThreadAdapter {
                 }
             }
 
+        }if(message instanceof LogMessage){
+            LogMessage logMessage = (LogMessage) message;
+            System.out.printf("%5s:%s\n", logMessage.type(), logMessage.data());
         } else {
             System.out.println("Error Message!");
         }

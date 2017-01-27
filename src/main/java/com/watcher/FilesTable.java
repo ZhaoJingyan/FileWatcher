@@ -50,13 +50,13 @@ class FilesTable {
                 if (column.getType().equals("NULL")) {
                     column.setType(message.type());
                     column.setTime(message.time());
-                    System.out.printf("%s 开始监控...\n", message.data());
+                    ControlCenter.putInformation(String.format("%s 开始监控...\n", message.data()));
                     result = true;
                 }
                 if (column.getType().equals("ENTRY_CREATE") || column.getType().equals("ENTRY_MODIFY")) {
                     column.setType(message.type());
                     column.setTime(message.time());
-                    System.out.printf("%s 刷新信息\n", message.data());
+                    ControlCenter.putInformation(String.format("%s 刷新信息\n", message.data()));
                     result = true;
                 }
             }
@@ -88,7 +88,7 @@ class FilesTable {
             for (FileInformationColumn column : columns) {
                 if ("ENTRY_CREATE".equals(column.getType()) || "ENTRY_MODIFY".equals(column.getType())) {
                     if (time - column.getTime() >= Resources.WATCHED_TIME()) {
-                        System.out.printf("%s 10分钟无变化，开始处理...\n", column.getName());
+                        ControlCenter.putInformation(String.format("%s 10分钟无变化，开始处理...\n", column.getName()));
                         column.setType("DISPOSE");
                         adapter.dispose(column.getName());
                     }

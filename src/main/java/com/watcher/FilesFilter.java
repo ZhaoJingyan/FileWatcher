@@ -8,7 +8,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 class FilesFilter extends ThreadAdapter {
 
-    static final String NAME = "Files Filter closed.";
+    public static final String NAME = "Files Filter closed.";
 
     private FilesTable table;
 
@@ -26,7 +26,7 @@ class FilesFilter extends ThreadAdapter {
     protected void execute() throws InterruptedException {
         Message<String> message = this.queue.take();
         if (!table.put(message)) {
-            System.out.printf("%s 非监控对象...\n", message.data());
+            ControlCenter.putInformation(String.format("%s 非监控对象...", message.data()));
         }
     }
 
