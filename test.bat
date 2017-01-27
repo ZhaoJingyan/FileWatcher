@@ -3,7 +3,11 @@ echo WScript.sleep 1000 > sleep.vbs
 Wscript sleep.vbs
 echo 1%% test info
 Wscript sleep.vbs
+echo 25%% test info
+Wscript sleep.vbs
 echo 50%% test info
+Wscript sleep.vbs
+echo 75%% test info
 Wscript sleep.vbs
 echo 100%% test info
 del sleep.vbs
