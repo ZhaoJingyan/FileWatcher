@@ -101,7 +101,7 @@ class ControlCenter extends ThreadAdapter {
         Message<?> message = queue.take();
         if(message instanceof ThreadAdapter.ThreadMessage){
             ThreadAdapter.ThreadMessage threadMessage = (ThreadAdapter.ThreadMessage) message;
-            System.out.printf("[%10s]:%s\n", ThreadAdapter.STARTED, threadMessage.data());
+            System.out.printf("[%10s]:%s\n", threadMessage.type(), threadMessage.data());
             if(ThreadAdapter.STARTED.equals(threadMessage.type()) && !NAME.equals(threadMessage.data())){
                 runThreadNum++;
             } else if(ThreadAdapter.CLOSED.equals(threadMessage.type())){
@@ -110,6 +110,9 @@ class ControlCenter extends ThreadAdapter {
                     System.out.println("The Program is closed.");
                     close();
                 }
+            } else if(ThreadAdapter.ERROR.equals(threadMessage.type())){
+                System.out.println("The Program is error!");
+                close();
             }
 
         } else if(message instanceof LogMessage){
