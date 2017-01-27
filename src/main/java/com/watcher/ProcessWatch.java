@@ -42,7 +42,9 @@ class ProcessWatch extends ThreadAdapter {
                 while(scanner.hasNext()){
                     String temp = scanner.nextLine();
                     if(before == null || !temp.equals(before)){
-                        System.out.println(temp);
+                        for(int i = 0; i < temp.length() * 2; i++)
+                            System.out.print('\b');
+                        System.out.print(temp);
                         before = temp;
                     }
                 }
