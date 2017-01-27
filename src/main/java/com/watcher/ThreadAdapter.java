@@ -6,6 +6,8 @@ package com.watcher;
  */
 abstract class ThreadAdapter extends Thread {
 
+    static final String ERROR = "error";
+
     static final String CLOSED = "closed";
 
     static final String STARTED = "started";
