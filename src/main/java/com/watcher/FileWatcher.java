@@ -27,9 +27,10 @@ public abstract class FileWatcher {
 
         // Check resources.
         if (!Resources.isInitialized()) {
+            ControlCenter.putMessage(new ThreadAdapter.ThreadMessage("资源出事变化失败",ThreadAdapter.ERROR));
             throw new WatcherException("初始化失败!!!");
         } else {
-            System.out.println("连接数据成功...");
+            ControlCenter.putInformation("连接数据成功...");
         }
 
         // Instantiating
