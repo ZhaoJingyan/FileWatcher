@@ -6,17 +6,22 @@ package com.watcher;
  */
 abstract class ThreadAdapter extends Thread {
 
+    static final String CLOSED = "closed";
+
+    static final String STARTED = "started";
+
     private boolean running = true;
 
-    private CloseMessage closeMessage;
-
     // Close Thread Message
-    private static class CloseMessage implements Message<String> {
+    static class ThreadMessage implements Message<String> {
 
         private String name;
 
-        CloseMessage(String name){
+        private String type;
+
+        ThreadMessage(String name, String type){
             this.name = name;
+            this.type = type;
         }
 
         @Override
@@ -26,7 +31,7 @@ abstract class ThreadAdapter extends Thread {
 
         @Override
         public String type() {
-            return "close";
+            return type;
         }
 
         @Override
@@ -41,7 +46,6 @@ abstract class ThreadAdapter extends Thread {
      */
     ThreadAdapter(String name){
         super(name);
-        closeMessage = new CloseMessage(name);
     }
 
     /**
@@ -49,13 +53,14 @@ abstract class ThreadAdapter extends Thread {
      */
     @Override
     public void run() {
+        ControlCenter.putMessage(new ThreadMessage(this.getName(), STARTED));
         try{
             while(isRunning())
                 execute();
         } catch (InterruptedException e){
             System.out.printf("%s线程堵塞被终止[%s]!!!\n", this.getName(), e.getMessage());
         }
-        ControlCenter.putMessage(closeMessage.data());
+        ControlCenter.putMessage(new ThreadMessage(this.getName(), CLOSED));
     }
 
     /**
