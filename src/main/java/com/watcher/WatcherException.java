@@ -10,4 +10,8 @@ class WatcherException extends Exception {
         super(message);
     }
 
+    WatcherException(String message, Throwable throwable){
+        super(message, throwable);
+    }
+
 }
