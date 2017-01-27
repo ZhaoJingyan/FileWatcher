@@ -40,11 +40,9 @@ public abstract class FileWatcher {
             watcher = new FilesTableWatcher(table);
             sender = new FileSender(watcher.getQueue(), table);
         } catch (WatcherException e) {
-            throw new WatcherException("初始化进程失败!", e);
-        } finally {
             close();
+            throw new WatcherException("初始化进程失败!", e);
         }
-
 
     }
 
