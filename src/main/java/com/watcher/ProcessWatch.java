@@ -21,7 +21,7 @@ class ProcessWatch extends ThreadAdapter {
 
     private Condition condition;
 
-    ProcessWatch(){
+    ProcessWatch() {
         super(NAME);
         over = false;
         lock = new ReentrantLock();
@@ -29,20 +29,20 @@ class ProcessWatch extends ThreadAdapter {
     }
 
     @Override
-    protected void execute() throws InterruptedException{
+    protected void execute() throws InterruptedException {
         lock.lockInterruptibly();
-        try{
-            if(process == null)
+        try {
+            if (process == null)
                 condition.await();
             Scanner scanner = new Scanner(process.getInputStream());
-            while(true){
-                if(over)
+            while (true) {
+                if (over)
                     break;
                 String before = null;
-                while(scanner.hasNext()){
+                while (scanner.hasNext()) {
                     String temp = scanner.nextLine();
-                    if(before == null || !temp.equals(before)){
-                        for(int i = 0; i < temp.length() * 2; i++)
+                    if (before == null || !temp.equals(before)) {
+                        for (int i = 0; i < temp.length() * 2; i++)
                             System.out.print('\b');
                         System.out.print(temp.trim());
                         before = temp;

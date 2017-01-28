@@ -40,14 +40,14 @@ class Resources {
         watchedTime = 600000;
         Statement statement = connection.createStatement();
         ResultSet set = statement.executeQuery("SELECT NAME, VALUE FROM VARIABLE");
-        while(set.next()){
+        while (set.next()) {
             String name = set.getString("NAME");
             String value = set.getString("VALUE");
-            if("PATH".equals(name)){
+            if ("PATH".equals(name)) {
                 path = value;
-            } else if("PATTERN".equals(name)){
+            } else if ("PATTERN".equals(name)) {
                 pattern = value;
-            } else if("WATCHED_TIME".equals(name)){
+            } else if ("WATCHED_TIME".equals(name)) {
                 watchedTime = Integer.parseInt(name);
             } else if ("SCRIPT".equals(name)) {
                 script = value;
@@ -55,9 +55,9 @@ class Resources {
         }
         set.close();
         statement.close();
-        if(path == null)
+        if (path == null)
             throw new WatcherException("NOT SET PATH!!!");
-        if(pattern == null)
+        if (pattern == null)
             throw new WatcherException("NOT SET PATTERN!!!");
         if (script == null)
             throw new WatcherException("NOT SET SCRIPT!!!");
@@ -65,23 +65,28 @@ class Resources {
 
     /**
      * 获取监控目录
+     *
      * @return 监控目录
      */
-    static String PATH(){
+    static String PATH() {
         return path;
     }
 
     /**
      * 过去文件命中被替换的时间表达式
+     *
      * @return 正则表达式
      */
-    static String PATTERN() { return pattern; }
+    static String PATTERN() {
+        return pattern;
+    }
 
     /**
      * 监控文件时间.
+     *
      * @return 毫秒
      */
-    static int WATCHED_TIME(){
+    static int WATCHED_TIME() {
         return watchedTime;
     }
 
@@ -96,16 +101,17 @@ class Resources {
 
     /**
      * 确认资源事是否初始化成功.
+     *
      * @return 初始化成功返回true
      */
-    static boolean isInitialized(){
+    static boolean isInitialized() {
         return initialized;
     }
 
     /**
      * Close the database connection.
      */
-    static void close(){
+    static void close() {
         try {
             connection.close();
         } catch (SQLException e) {
@@ -115,6 +121,7 @@ class Resources {
 
     /**
      * Get File parameters from parameters.db.
+     *
      * @return All Information
      * @throws SQLException Database Exception
      */
@@ -122,7 +129,7 @@ class Resources {
         Statement statement = connection.createStatement();
         ResultSet set = statement.executeQuery("SELECT ID,NAME,WATCH_DATE FROM FILE_INFO");
         List<FileInformation> result = new ArrayList<>();
-        while(set.next()){
+        while (set.next()) {
             int id = set.getInt("ID");
             String name = set.getString("NAME");
             String watchDate = set.getString("WATCH_DATE");

@@ -17,12 +17,13 @@ class FilesTableWatcher extends ThreadAdapter implements FileDisposeAdapter {
 
     /**
      * 构造方法
+     *
      * @param table 文件列表
      * @throws WatcherException 初始化失败
      */
-    FilesTableWatcher(FilesTable table) throws WatcherException{
+    FilesTableWatcher(FilesTable table) throws WatcherException {
         super(NAME);
-        if(table == null)
+        if (table == null)
             throw new WatcherException("文件列表为空!!!");
         this.table = table;
         this.queue = new LinkedBlockingDeque<>();

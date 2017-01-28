@@ -19,14 +19,15 @@ class FileSender extends ThreadAdapter {
 
     /**
      * 构造方法.
+     *
      * @param queue 消息接收队列
      * @throws WatcherException 初始化失败异常
      */
     FileSender(LinkedBlockingDeque<String> queue, FilesTable table) throws WatcherException {
         super(NAME);
-        if(queue == null)
+        if (queue == null)
             throw new WatcherException("接收队列为空!!!");
-        if(table == null)
+        if (table == null)
             throw new WatcherException("文件列表为空!!!");
         this.queue = queue;
         this.table = table;
@@ -39,7 +40,7 @@ class FileSender extends ThreadAdapter {
         String name = queue.take();
         String path = Resources.PATH() + '\\' + name;
         ControlCenter.putInformation(String.format("准备发送文件%s", path));
-        if(send(path) == 0)
+        if (send(path) == 0)
             table.updateFile(name);
         else
             ControlCenter.putInformation("发送失败");
@@ -47,11 +48,12 @@ class FileSender extends ThreadAdapter {
 
     /**
      * 通过执行bat脚本发送文件.
+     *
      * @param path 文件完整路径
      * @return bat返回值
      * @throws InterruptedException 进程堵塞中断
      */
-    private int send(String path) throws InterruptedException{
+    private int send(String path) throws InterruptedException {
         Runtime runtime = Runtime.getRuntime();
         try {
             Process process = runtime.exec(".\\" + Resources.SCRIPT() + " " + path);
@@ -59,7 +61,7 @@ class FileSender extends ThreadAdapter {
             process.waitFor();
             watch.setOver(true);
             int exitVal = process.exitValue();
-            if(exitVal == 0){
+            if (exitVal == 0) {
                 ControlCenter.putInformation(String.format("%s 发送成功[%d]...", path, exitVal));
             }
             return exitVal;
@@ -74,9 +76,9 @@ class FileSender extends ThreadAdapter {
     /**
      * 关闭线程
      */
-    void close(){
+    void close() {
         super.close();
-        if(watch.isRunning())
+        if (watch.isRunning())
             watch.close();
     }
 

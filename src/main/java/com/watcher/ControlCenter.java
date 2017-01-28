@@ -65,7 +65,7 @@ class ControlCenter extends ThreadAdapter {
     }
 
     static FileWatcher getFileWatcher() throws WatcherException {
-        if(center == null){
+        if (center == null) {
             center = new ControlCenter();
         }
         if (fileWatcher == null)
@@ -81,10 +81,10 @@ class ControlCenter extends ThreadAdapter {
         }
     }
 
-    static void putInformation(String information){
-        try{
+    static void putInformation(String information) {
+        try {
             queue.put(new LogMessage(information, INFO));
-        }catch(InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -99,23 +99,23 @@ class ControlCenter extends ThreadAdapter {
     @Override
     protected void execute() throws InterruptedException {
         Message<?> message = queue.take();
-        if(message instanceof ThreadAdapter.ThreadMessage){
+        if (message instanceof ThreadAdapter.ThreadMessage) {
             ThreadAdapter.ThreadMessage threadMessage = (ThreadAdapter.ThreadMessage) message;
             System.out.printf("[%10s]:%s\n", threadMessage.type(), threadMessage.data());
-            if(ThreadAdapter.STARTED.equals(threadMessage.type()) && !NAME.equals(threadMessage.data())){
+            if (ThreadAdapter.STARTED.equals(threadMessage.type()) && !NAME.equals(threadMessage.data())) {
                 runThreadNum++;
-            } else if(ThreadAdapter.CLOSED.equals(threadMessage.type())){
+            } else if (ThreadAdapter.CLOSED.equals(threadMessage.type())) {
                 runThreadNum--;
-                if(runThreadNum <= 0){
+                if (runThreadNum <= 0) {
                     System.out.println("The Program is closed.");
                     close();
                 }
-            } else if(ThreadAdapter.ERROR.equals(threadMessage.type())){
+            } else if (ThreadAdapter.ERROR.equals(threadMessage.type())) {
                 System.out.println("The Program is error!");
                 close();
             }
 
-        } else if(message instanceof LogMessage){
+        } else if (message instanceof LogMessage) {
             LogMessage logMessage = (LogMessage) message;
             System.out.printf("[%10s]:%s\n", logMessage.type(), logMessage.data());
         } else {

@@ -21,7 +21,7 @@ abstract class ThreadAdapter extends Thread {
 
         private String type;
 
-        ThreadMessage(String name, String type){
+        ThreadMessage(String name, String type) {
             this.name = name;
             this.type = type;
         }
@@ -44,9 +44,10 @@ abstract class ThreadAdapter extends Thread {
 
     /**
      * Constructor.
+     *
      * @param name Thread Name
      */
-    ThreadAdapter(String name){
+    ThreadAdapter(String name) {
         super(name);
     }
 
@@ -56,10 +57,10 @@ abstract class ThreadAdapter extends Thread {
     @Override
     public void run() {
         ControlCenter.putMessage(new ThreadMessage(this.getName(), STARTED));
-        try{
-            while(isRunning())
+        try {
+            while (isRunning())
                 execute();
-        } catch (InterruptedException e){
+        } catch (InterruptedException e) {
             ControlCenter.putInformation(String.format("%s线程堵塞被终止[%s]!!!", this.getName(), e.getMessage()));
         }
         ControlCenter.putMessage(new ThreadMessage(this.getName(), CLOSED));
@@ -68,22 +69,24 @@ abstract class ThreadAdapter extends Thread {
     /**
      * Close the thread.
      */
-    void close(){
+    void close() {
         running = false;
         this.interrupt();
     }
 
     /**
      * 线程的主体逻辑.
+     *
      * @throws InterruptedException 中断
      */
     protected abstract void execute() throws InterruptedException;
 
     /**
      * 判断线程是否关闭
+     *
      * @return 如果线程关闭, 则返回false
      */
-    final boolean isRunning(){
+    final boolean isRunning() {
         return this.running;
     }
 

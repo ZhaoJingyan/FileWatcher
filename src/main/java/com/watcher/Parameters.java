@@ -35,28 +35,28 @@ class Parameters {
     private static void initialize() throws SQLException, WatcherException {
         Statement statement = connection.createStatement();
         ResultSet set = statement.executeQuery("SELECT NAME, VALUE FROM VARIABLE");
-        while(set.next()){
+        while (set.next()) {
             String name = set.getString("NAME");
             String value = set.getString("VALUE");
-            if("PATH".equals(name)){
+            if ("PATH".equals(name)) {
                 path = value;
             }
         }
         set.close();
         statement.close();
-        if(path == null)
+        if (path == null)
             throw new WatcherException("NOT SET PATH!!!");
     }
 
-    static String PATH(){
+    static String PATH() {
         return path;
     }
 
-    static boolean isInitialized(){
+    static boolean isInitialized() {
         return initialized;
     }
 
-    static void close(){
+    static void close() {
         try {
             connection.close();
         } catch (SQLException e) {
@@ -66,6 +66,7 @@ class Parameters {
 
     /**
      * Get File Information from parameters.db.
+     *
      * @return All Information
      * @throws SQLException Database Exception
      */
@@ -73,7 +74,7 @@ class Parameters {
         Statement statement = connection.createStatement();
         ResultSet set = statement.executeQuery("SELECT ID,NAME,WATCH_DATE FROM FILE_INFO");
         List<FileInformation> result = new ArrayList<>();
-        while(set.next()){
+        while (set.next()) {
             int id = set.getInt("ID");
             String name = set.getString("NAME");
             String watchDate = set.getString("WATCH_DATE");

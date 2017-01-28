@@ -6,11 +6,11 @@ package com.watcher;
  */
 class WatcherException extends Exception {
 
-    WatcherException(String message){
+    WatcherException(String message) {
         super(message);
     }
 
-    WatcherException(String message, Throwable throwable){
+    WatcherException(String message, Throwable throwable) {
         super(message, throwable);
     }
 

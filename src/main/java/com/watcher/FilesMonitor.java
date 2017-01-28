@@ -21,27 +21,28 @@ class FilesMonitor extends ThreadAdapter {
 
     /**
      * Constructor.
+     *
      * @throws WatcherException 初始化失败
      */
     FilesMonitor(LinkedBlockingQueue<Message<String>> queue) throws WatcherException {
         super(NAME);
-        if(queue == null)
+        if (queue == null)
             throw new WatcherException("消息队列不能为空");
-        File  file = new File(Resources.PATH());
-        if(!file.exists())
+        File file = new File(Resources.PATH());
+        if (!file.exists())
             throw new WatcherException(String.format("[%s]不存在", file.getPath()));
         this.queue = queue;
         try {
             this.service = FileSystems.getDefault().newWatchService();
             Path path = Paths.get(file.getPath());
-            path.register(this.service,StandardWatchEventKinds.ENTRY_CREATE,StandardWatchEventKinds.ENTRY_MODIFY);
+            path.register(this.service, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY);
         } catch (IOException e) {
-            throw new WatcherException("调用文件监控API失败!",e);
+            throw new WatcherException("调用文件监控API失败!", e);
         }
 
     }
 
-    private Message<String> newMessage(String fileName, String type){
+    private Message<String> newMessage(String fileName, String type) {
         return new FileMessage(fileName, type);
     }
 
@@ -58,7 +59,7 @@ class FilesMonitor extends ThreadAdapter {
     /**
      * 关闭线程
      */
-    void close(){
+    void close() {
         super.close();
         try {
             service.close();
@@ -67,7 +68,7 @@ class FilesMonitor extends ThreadAdapter {
         }
     }
 
-    private class FileMessage implements Message<String>{
+    private class FileMessage implements Message<String> {
 
         private String fileName;
 
@@ -96,7 +97,7 @@ class FilesMonitor extends ThreadAdapter {
             return this.time;
         }
 
-        public String toString(){
+        public String toString() {
             return String.format("Message: {info: %s, type: %s}", fileName, type);
         }
 

@@ -32,6 +32,7 @@ class FilesFilter extends ThreadAdapter {
 
     /**
      * 消息队列
+     *
      * @return 消息队列
      */
     LinkedBlockingQueue<Message<String>> getQueue() {

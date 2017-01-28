@@ -9,12 +9,11 @@ import java.util.GregorianCalendar;
 import java.util.Vector;
 
 /**
- *
  * Created by Zhao Jinyan on 2016/12/28.
  */
 public class FileInformationColumn {
 
-    private static final DateFormat format  = new SimpleDateFormat("yyyyMMdd");
+    private static final DateFormat format = new SimpleDateFormat("yyyyMMdd");
 
     private static final Calendar calendar = new GregorianCalendar();
 
@@ -28,7 +27,7 @@ public class FileInformationColumn {
 
     private long time;
 
-    private static String getDateString(Date date){
+    private static String getDateString(Date date) {
         return format.format(date);
     }
 
@@ -37,7 +36,6 @@ public class FileInformationColumn {
     }
 
     /**
-     *
      * @param information File Information
      * @throws WatcherException 日期转化为字符串失败抛出异常
      */
@@ -57,8 +55,8 @@ public class FileInformationColumn {
     /**
      * 日期加一
      */
-    void addOneDay(){
-        synchronized (calendar){
+    void addOneDay() {
+        synchronized (calendar) {
             calendar.setTime(this.watchDate);
             calendar.add(Calendar.DATE, 1);
             this.watchDate = calendar.getTime();
@@ -69,7 +67,7 @@ public class FileInformationColumn {
         }
     }
 
-    public Vector<String> getVector(){
+    public Vector<String> getVector() {
         Vector<String> vector = new Vector<>();
         vector.add(Integer.toString(information.getId()));
         vector.add(name);
@@ -79,6 +77,7 @@ public class FileInformationColumn {
 
     /**
      * 获取文件名.
+     *
      * @return File Name
      */
     String getName() {
@@ -87,6 +86,7 @@ public class FileInformationColumn {
 
     /**
      * 文件此时的状态.
+     *
      * @return File Type
      */
     String getType() {
@@ -95,6 +95,7 @@ public class FileInformationColumn {
 
     /**
      * 设置文件状态
+     *
      * @param type File Type
      */
     void setType(String type) {
@@ -103,6 +104,7 @@ public class FileInformationColumn {
 
     /**
      * 获取时间
+     *
      * @return Long表示的时间
      */
     long getTime() {
