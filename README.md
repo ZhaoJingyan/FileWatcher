@@ -1,3 +1,3 @@
 # File Watcher
 
-version: 1.0
+version: 1.1.20170128-Gamm
